@@ -1,6 +1,6 @@
 module LogicEngine
   class LevelController
-    def initialize(level_number=1)
+    def initialize(level_number = 1)
       @level = Level.retrieve(level_number)
       Thinginess::Thing.clear_thing_register
       @selected_words = []
@@ -28,12 +28,10 @@ module LogicEngine
 
     def available_word_definitions
       all_definitions = @level.tomes.map(&:definitions).flatten
-      all_definitions.select {|d| @level.available_words.include? d.word }
+      all_definitions.select { |d| @level.available_words.include? d.word }
     end
 
-    def selected_words
-      @selected_words
-    end
+    attr_reader :selected_words
 
     def select_word(word)
       if @level.available_words.include? word.to_sym
@@ -52,11 +50,11 @@ module LogicEngine
       begin
         @demon.cast spell
       rescue StandardError
-        @notifier.call "That spell makes no sense!"
+        @notifier.call 'That spell makes no sense!'
         return
       end
 
-      @notifier.call "Your spell is cast!"
+      @notifier.call 'Your spell is cast!'
       @selected_words = []
     end
 
@@ -65,6 +63,5 @@ module LogicEngine
     def spell
       @selected_words.map(&:word).join(' ')
     end
-
   end
 end

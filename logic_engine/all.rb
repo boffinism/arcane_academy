@@ -4,6 +4,7 @@ require 'arcana'
 require_relative 'level_controller'
 require_relative 'level'
 require_relative 'selected_word'
-require_relative 'things/base_thing'
-require_relative 'things/tree'
-require_relative 'tomes/tree_lore'
+
+Dir[File.dirname(__FILE__) + '/things/*.rb'].each { |file| require file }
+Dir[File.dirname(__FILE__) + '/tomes/*.rb'].each { |file| require file }
+Dir[File.dirname(__FILE__) + '/levels/*.rb'].each { |file| require file }

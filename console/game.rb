@@ -6,44 +6,32 @@ module Console
       @running = true
 
       @level_controller = LogicEngine::LevelController.new(1)
-      @level_controller.when_message {|m| write_line m }
-      write_line "Welcome to Arcane Academy"
-      write_line "This is your first class"
+      @level_controller.when_message { |m| write_line m }
+
+      write_intro_text
+
+      run_game_loop
+    end
+
+    private
+
+    def write_intro_text
+      write_line 'Welcome to Arcane Academy'
+      write_line 'This is your first class'
       describe_surroundings
 
       describe_challenge
       describe_available_words
 
       describe_options
-      
-      while @running
-        describe_selected_words
-        inputs = read_line
-
-        case inputs[0]
-        when 's'
-          @level_controller.select_word inputs[1]
-        when 'd'
-          @level_controller.delete_word find_selected_word(inputs[1])
-        when 'q'
-          write_line 'Byebye!'
-          @running = false
-        when 'c'
-          @level_controller.cast_spell
-          describe_surroundings
-          if @level_controller.challenge_met?
-            write_line 'You have succeeded! You win!'
-            @running = false
-          else
-            describe_challenge
-          end
-        else
-          write_line 'What?'
-        end
-      end
     end
 
-    private
+    def run_game_loop
+      while @running
+        describe_selected_words
+        process_inputs(read_line)
+      end
+    end
 
     def read_line
       $stdout.print '> '
@@ -55,7 +43,7 @@ module Console
     end
 
     def describe_surroundings
-      write_line "These are your surroundings:"
+      write_line 'These are your surroundings:'
       @level_controller.things.each do |thing|
         write_line thing
       end
@@ -73,19 +61,19 @@ module Console
     end
 
     def describe_selected_words
-      spell = ""
+      spell = ''
       @level_controller.selected_words.each do |selected_word|
         spell += "(#{selected_word.id}) #{selected_word.word} "
       end
-      if spell != ""
+      if spell != ''
         write_line "Your spell so far is: #{spell}"
       else
-        write_line "Start selecting words for your spell"
+        write_line 'Start selecting words for your spell'
       end
     end
 
     def describe_available_words
-      write_line "Your available words are:"
+      write_line 'Your available words are:'
       @level_controller.available_word_definitions.each do |definition|
         write_line definition
       end
@@ -96,6 +84,44 @@ module Console
         selected_word.id.to_s == word_id
       end
       sw.first
+    end
+
+    INPUT_COMMANDS = { 's' => :select_word,
+                       'd' => :delete_word,
+                       'q' => :quit_game,
+                       'c' => :cast_spell }.freeze
+
+    def process_inputs(inputs)
+      command = INPUT_COMMANDS[inputs[0]]
+      if command
+        send command, inputs[1]
+      else
+        write_line 'What?'
+      end
+    end
+
+    def select_word(word)
+      @level_controller.select_word word
+    end
+
+    def delete_word(word_id)
+      @level_controller.delete_word find_selected_word(word_id)
+    end
+
+    def cast_spell(_input)
+      @level_controller.cast_spell
+      describe_surroundings
+      if @level_controller.challenge_met?
+        write_line 'You have succeeded! You win!'
+        @running = false
+      else
+        describe_challenge
+      end
+    end
+
+    def quit_game(_input)
+      write_line 'Byebye!'
+      @running = false
     end
   end
 end
