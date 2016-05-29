@@ -28,7 +28,7 @@ module LogicEngine
     end
 
     def available_words
-      [:arboria, :minimis, :medimal, :gorgal, :grandis]
+      %i(arboria minimis medimal gorgal grandis)
     end
 
   end

@@ -46,6 +46,7 @@ module Console
     private
 
     def read_line
+      $stdout.print '> '
       $stdin.gets.chomp.split
     end
 
@@ -84,8 +85,10 @@ module Console
     end
 
     def describe_available_words
-      words = @level_controller.available_words.map(&:to_s).join(' ')
-      write_line "Your available words are: #{words}"
+      write_line "Your available words are:"
+      @level_controller.available_word_definitions.each do |definition|
+        write_line definition
+      end
     end
 
     def find_selected_word(word_id)

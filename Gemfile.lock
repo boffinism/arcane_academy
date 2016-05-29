@@ -1,16 +1,16 @@
 GIT
   remote: https://github.com/boffinism/arcana.git
-  revision: e619150f0bf9efbd78bae8b5b9420efadab5adbc
-  tag: v0.0.1
+  revision: 407f299759d945a9d4da9d303724e61a6fc8f447
+  tag: v0.0.3
   specs:
-    arcana (0.0.1)
+    arcana (0.0.2)
 
 GIT
   remote: https://github.com/boffinism/thinginess.git
-  revision: 08e32b58736387981754576b0f035237c69871b7
-  tag: v0.0.1
+  revision: e85c21b6426efa53c9c8adfd26b35253beff48d9
+  tag: v0.0.2
   specs:
-    thinginess (0.0.1)
+    thinginess (0.0.2)
 
 GEM
   remote: https://rubygems.org/

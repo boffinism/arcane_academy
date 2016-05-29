@@ -26,8 +26,9 @@ module LogicEngine
       @level.challenge_met?
     end
 
-    def available_words
-      @level.available_words
+    def available_word_definitions
+      all_definitions = @level.tomes.map(&:definitions).flatten
+      all_definitions.select {|d| @level.available_words.include? d.word }
     end
 
     def selected_words
@@ -35,7 +36,11 @@ module LogicEngine
     end
 
     def select_word(word)
-      @selected_words << SelectedWord.make(word)
+      if @level.available_words.include? word.to_sym
+        @selected_words << SelectedWord.make(word)
+      else
+        @notifier.call "'#{word}' is not an available word"
+      end
     end
 
     def delete_word(selected_word)
@@ -43,6 +48,7 @@ module LogicEngine
     end
 
     def cast_spell
+      Things::BaseThing.reset_change_tracking
       begin
         @demon.cast spell
       rescue StandardError
