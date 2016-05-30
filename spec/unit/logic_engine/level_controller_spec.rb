@@ -42,23 +42,9 @@ RSpec.describe LogicEngine::LevelController do
   end
 
   describe '#available_word_definitions' do
-    let(:definition_set_1) { make_definitions 2, [:matching, nil] }
-    let(:definition_set_2) { make_definitions 2, [nil, :matching2] }
-    let(:tomes) do
-      [make_tome(definition_set_1),
-       make_tome(definition_set_2)]
-    end
-
-    it "filters the level's Tome definitions by its available words" do
-      expect(level).to receive(:available_words)
-        .at_least(1)
-        .and_return([:matching, :matching2])
-
-      result = subject.available_word_definitions
-
-      expect(result.length).to eq 2
-      expect(result).to include(definition_set_1[0])
-      expect(result).to include(definition_set_2[1])
+    it "passes on the appropriate Level's word definitions" do
+      expect(level).to receive(:available_word_definitions).and_return :defs
+      expect(subject.available_word_definitions).to eq :defs
     end
   end
 
@@ -178,18 +164,6 @@ RSpec.describe LogicEngine::LevelController do
         subject.cast_spell
         expect(message_sent).to eq true
       end
-    end
-  end
-
-  def make_tome(definitions)
-    double :tome,
-           definitions: definitions
-  end
-
-  def make_definitions(number_of_words, texts = [])
-    Array.new(number_of_words) do |index|
-      double :definition,
-             word: (texts[index] || "word text #{index}".to_sym)
     end
   end
 end

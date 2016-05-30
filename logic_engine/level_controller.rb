@@ -27,8 +27,7 @@ module LogicEngine
     end
 
     def available_word_definitions
-      all_definitions = @level.tomes.map(&:definitions).flatten
-      all_definitions.select { |d| @level.available_words.include? d.word }
+      @level.available_word_definitions
     end
 
     attr_reader :selected_words

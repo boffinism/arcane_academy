@@ -1,6 +1,6 @@
 module LogicEngine
   module Levels
-    class Level1
+    class Level1 < LogicEngine::Level
       def tomes
         [Tomes::TreeLore]
       end
